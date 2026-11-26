@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pharma Quality Intelligence Hub - Architecture (Hardened)</title>
+  <title>Pharma Quality Intelligence Hub - Architecture</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -82,7 +82,7 @@
 <body>
   <div class="wrap">
     <h1>Pharma Quality Intelligence Hub</h1>
-    <p class="sub">Standards-audited architecture built for Amgen Senior Data Scientist (R-262535): GO-FAIR, Databricks Unity Catalog, MCP SDK v2, OWASP LLM/Agentic Top 10, and OpenTelemetry GenAI.</p>
+    <p class="sub">Standards-aligned architecture: GO-FAIR, Databricks Unity Catalog, MCP SDK v2, OWASP LLM/Agentic Top 10, and OpenTelemetry GenAI.</p>
 
     <div class="flow">
       <div class="stage">
@@ -108,7 +108,7 @@
     </div>
 
     <div class="panel">
-      <h2>What each layer proves for Amgen R-262535</h2>
+      <h2>Key Engineering Components</h2>
       <ul>
         <li><strong>FAIR Data &amp; Databricks Unity Catalog:</strong> <code>metadata/data_contract.json</code> (dataset PID <code>urn:pharma-qih:dataset:gold_recalls:v1.0.0</code>, 21 CFR 7.3 reference, ODCS SLA) enforced in Python and published to <code>workspace.pharma_quality_fair</code> with Unity Catalog <code>SET TAGS</code> and enforced Delta <code>CHECK</code> constraints.</li>
         <li><strong>MCP Server &amp; Enterprise API:</strong> <code>src/pharma_qih/mcp_server.py</code> (MCP SDK v2.3 with <code>read_only_hint=True</code>, structured Pydantic outputs, and <code>fair://</code> resources) paired with <code>src/pharma_qih/api.py</code> (<code>APIKeyHeader</code> OpenAPI auth, pagination, and 503 DB fault handling).</li>
@@ -118,11 +118,11 @@
     </div>
 
     <div class="panel">
-      <h2>How to defend this architecture in an interview</h2>
+      <h2>Architecture Decision Records (ADRs)</h2>
       <ul>
-        <li><strong>Why Unity Catalog Tags AND TBLPROPERTIES?</strong> Unity Catalog <code>SET TAGS</code> powers workspace discovery and ABAC (FAIR Findable), while Delta <code>CHECK</code> constraints block bad rows at write time (FAIR Reusable).</li>
-        <li><strong>Why test Guardrail False Positive Rate (FPR)?</strong> Naive regex blockers break real pharma queries like "drop in potency" or "union of trends"; measuring both security recall and 0% FPR proves production engineering maturity.</li>
-        <li><strong>Why enforce RBAC inside both REST and MCP/Agent?</strong> Per OWASP Agentic Top 10 (ASI03), API-edge auth is not enough; the agent and MCP layer must enforce tool-level RBAC before executing any query.</li>
+        <li><strong>Unity Catalog Tags + TBLPROPERTIES:</strong> Unity Catalog <code>SET TAGS</code> powers workspace discovery and ABAC (FAIR Findable), while Delta <code>CHECK</code> constraints block invalid rows at write time (FAIR Reusable).</li>
+        <li><strong>Guardrail False-Positive Rate (FPR):</strong> Measuring both 100% security recall and 0% FPR on domain queries (&ldquo;drop in potency&rdquo;, &ldquo;union of trends&rdquo;) ensures guardrails do not break legitimate Quality workflows.</li>
+        <li><strong>Tool-Layer RBAC:</strong> Per OWASP Agentic Top 10 (ASI03), enforcing <code>is_mcp_tool_allowed</code> inside both the agent and MCP server guarantees least privilege across HTTP and stdio MCP.</li>
       </ul>
     </div>
   </div>

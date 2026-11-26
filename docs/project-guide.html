@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pharma Quality Intelligence Hub - Complete Project Guide</title>
+  <title>Pharma Quality Intelligence Hub - Reference Guide</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -34,7 +34,6 @@
       margin-bottom: 18px;
     }
     h2 { font-size: 19px; margin: 0 0 12px; color: var(--accent); }
-    h3 { font-size: 15.5px; margin: 14px 0 6px; }
     ul, ol { margin: 0; padding-left: 20px; }
     li { margin-bottom: 8px; font-size: 14.5px; }
     code {
@@ -60,12 +59,12 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>Pharma Quality Intelligence Hub &mdash; Complete Reference Guide</h1>
-    <p class="sub">Readable companion to <code>README.md</code> &middot; Repo: <code>github.com/Padwalpankaj9/pharma-quality-intelligence-hub</code></p>
+    <h1>Pharma Quality Intelligence Hub &mdash; Reference Guide</h1>
+    <p class="sub">Companion to <code>README.md</code> &middot; Repo: <code>github.com/Padwalpankaj9/pharma-quality-intelligence-hub</code></p>
 
     <div class="card">
-      <h2>1. What This Project Is</h2>
-      <p>An end-to-end <strong>FAIR Pharma Quality Data Product</strong>, <strong>Custom Python MCP v2 Server</strong>, <strong>RBAC-Gated FastAPI Service</strong>, and <strong>Evaluated Quality Investigation Agent</strong> built on live public FDA Drug Enforcement (Recall) data and deployed to <strong>Databricks Unity Catalog</strong> (<code>workspace.pharma_quality_fair</code>).</p>
+      <h2>1. Overview</h2>
+      <p>An end-to-end <strong>FAIR Pharma Quality Data Product</strong>, <strong>Custom Python MCP v2 Server</strong>, <strong>RBAC-Gated FastAPI Service</strong>, and <strong>Evaluated Quality Investigation Agent</strong> built over live public FDA Drug Enforcement (Recall) data and governed in <strong>Databricks Unity Catalog</strong> (<code>workspace.pharma_quality_fair</code>).</p>
     </div>
 
     <div class="card">
@@ -88,7 +87,7 @@
     </div>
 
     <div class="card">
-      <h2>3. Quick Commands (Run Anytime)</h2>
+      <h2>3. Quick Commands</h2>
       <pre><code>cd ~/Documents/Software_Development/pharma-quality-intelligence-hub
 
 # Refresh live OpenFDA Bronze -> Silver -> Gold tables locally
@@ -110,14 +109,13 @@ uv run python databricks/deploy_to_databricks.py</code></pre>
     </div>
 
     <div class="card">
-      <h2>4. Interview Q&amp;A Cheat Sheet</h2>
+      <h2>4. Architecture Decision Records (ADRs)</h2>
       <ol>
-        <li><strong>Why both SQLite and Databricks Unity Catalog?</strong> Read-only SQLite keeps local dev, MCP tests, and GitHub Actions CI sub-second with zero cloud secrets, while Unity Catalog proves live Delta governance (<code>SET TAGS</code>, <code>CHECK</code>, <code>PK</code>).</li>
-        <li><strong>Why Unity Catalog <code>SET TAGS</code> in addition to <code>TBLPROPERTIES</code>?</strong> Unity Catalog tags power Workspace Search, schema-to-table inheritance, and ABAC (FAIR Findable + Accessible), whereas <code>TBLPROPERTIES</code> holds table metadata.</li>
-        <li><strong>Why measure Guardrail False Positive Rate (FPR)?</strong> Naive filters block real pharma phrases like &ldquo;drop in potency&rdquo; or &ldquo;union of trends&rdquo;. Measuring 100% security recall with 0% FPR proves production safety.</li>
-        <li><strong>Why enforce RBAC inside the agent and MCP server?</strong> Per OWASP Agentic Top 10 (ASI03), API-edge auth is not enough; enforcing <code>is_mcp_tool_allowed</code> at the tool layer guarantees least privilege across REST, agent, and stdio MCP.</li>
-        <li><strong>How is MCP tested?</strong> Using MCP SDK v2&rsquo;s in-memory <code>Client(mcp_server.mcp)</code> to test real protocol framing (<code>list_tools</code> annotations/schemas, <code>call_tool</code> <code>structured_content</code>, RBAC denial, and <code>fair://</code> resources).</li>
-        <li><strong>What real bug did your evals catch?</strong> The <code>ZERO-01</code> case (&ldquo;Class III nitrosamine recalls&rdquo;) caught a substring bug where <code>class ii</code> matched inside <code>class iii</code> before <code>class iii</code> was checked.</li>
+        <li><strong>Dual Storage (SQLite + Databricks Unity Catalog):</strong> Read-only SQLite keeps local dev, MCP tests, and GitHub Actions CI sub-second with zero cloud secrets, while Unity Catalog enforces live Delta governance (<code>SET TAGS</code>, <code>CHECK</code>, <code>PK</code>).</li>
+        <li><strong>Unity Catalog <code>SET TAGS</code> + <code>TBLPROPERTIES</code>:</strong> Unity Catalog tags power Workspace Search, schema-to-table inheritance, and ABAC (FAIR Findable + Accessible), whereas <code>TBLPROPERTIES</code> holds table metadata.</li>
+        <li><strong>Guardrail False-Positive Rate (FPR):</strong> Measuring 100% security recall with 0% FPR on domain queries (&ldquo;drop in potency&rdquo;, &ldquo;union of trends&rdquo;) ensures guardrails do not break legitimate workflows.</li>
+        <li><strong>Tool-Layer RBAC:</strong> Per OWASP Agentic Top 10 (ASI03), enforcing <code>is_mcp_tool_allowed</code> inside both the agent and MCP server guarantees least privilege across REST, agent, and stdio MCP.</li>
+        <li><strong>In-Memory MCP Protocol Testing:</strong> Using MCP SDK v2&rsquo;s <code>Client(mcp_server.mcp)</code> tests real protocol framing (<code>list_tools</code> annotations/schemas, <code>call_tool</code> <code>structured_content</code>, RBAC denial, and <code>fair://</code> resources).</li>
       </ol>
     </div>
   </div>
