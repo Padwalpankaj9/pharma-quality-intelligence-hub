@@ -1,0 +1,43 @@
+version: "1.0.0"
+owner: "Pankaj Padwal"
+classification: "Public Regulatory Data (OpenFDA)"
+roles:
+  quality_viewer:
+    description: "Read-only access to aggregated quality trends and FAIR metadata."
+    allowed_endpoints:
+      - "/health"
+      - "/v1/metadata"
+      - "/v1/trends/root-causes"
+      - "/v1/anomalies"
+    allowed_mcp_tools:
+      - "get_fair_metadata"
+      - "get_root_cause_trends"
+      - "get_monthly_anomalies"
+  quality_analyst:
+    description: "Read access to record-level recalls, firm risk summaries, and the Quality investigation agent."
+    allowed_endpoints:
+      - "/health"
+      - "/v1/metadata"
+      - "/v1/recalls"
+      - "/v1/firms/risk"
+      - "/v1/trends/root-causes"
+      - "/v1/anomalies"
+      - "/v1/agent/ask"
+      - "/v1/monitoring/summary"
+    allowed_mcp_tools:
+      - "search_recalls"
+      - "get_firm_risk_summary"
+      - "get_root_cause_trends"
+      - "get_monthly_anomalies"
+      - "get_fair_metadata"
+  data_steward:
+    description: "Full read and pipeline refresh permissions, plus telemetry audit."
+    allowed_endpoints:
+      - "*"
+    allowed_mcp_tools:
+      - "*"
+guardrails:
+  sql_mode: "read_only"
+  max_rows_per_query: 200
+  pii_redaction: true
+  prompt_injection_filter: true

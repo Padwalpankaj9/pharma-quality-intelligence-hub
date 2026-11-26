@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pharma-qih:dataset:gold_recalls:v1.0.0",
+  "title": "PharmaQualityRecallGold",
+  "version": "1.0.0",
+  "owner": "Pankaj Padwal",
+  "source": "https://api.fda.gov/drug/enforcement.json",
+  "license": {
+    "source_license": "CC0-1.0",
+    "source_terms_url": "https://open.fda.gov/license/",
+    "derived_product_license": "MIT"
+  },
+  "sla": {
+    "freshness_hours": 24,
+    "retention_days": 365,
+    "max_invalid_date_ratio": 0.05
+  },
+  "authoritative_definitions": {
+    "fda_recall_classification": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-A/part-7/subpart-A/section-7.3"
+  },
+  "fair_principles": {
+    "findable": "Registered in Databricks Unity Catalog (workspace.pharma_quality_fair) with Unity Catalog SET TAGS, persistent recall_number IDs, and dataset PID urn:pharma-qih:dataset:gold_recalls:v1.0.0.",
+    "accessible": "Exposed via RBAC-gated FastAPI REST endpoints (APIKeyHeader) and read-only Python MCP v2 tools and resources.",
+    "interoperable": "Conforms to JSON Schema 2020-12, ISO-8601 dates, 21 CFR 7.3 recall classes, and standardized Pharma Quality root-cause taxonomy.",
+    "reusable": "Includes runtime JSON Schema validation, Delta NOT NULL and CHECK constraints, SHA-256 source lineage, and explicit CC0-1.0 / MIT licensing."
+  },
+  "type": "object",
+  "required": [
+    "recall_number",
+    "recalling_firm",
+    "classification",
+    "status",
+    "report_date",
+    "report_month",
+    "root_cause_category",
+    "reason_for_recall",
+    "product_description",
+    "state",
+    "country",
+    "ingested_at_utc",
+    "source_sha256"
+  ],
+  "properties": {
+    "recall_number": { "type": "string", "minLength": 3 },
+    "recalling_firm": { "type": "string", "minLength": 1 },
+    "classification": { "type": "string", "enum": ["Class I", "Class II", "Class III", "Not Yet Classified"] },
+    "status": { "type": "string" },
+    "report_date": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "report_month": { "type": "string", "pattern": "^\\d{4}-\\d{2}$" },
+    "root_cause_category": {
+      "type": "string",
+      "enum": [
+        "Sterility & Contamination",
+        "Potency, Assay & Stability",
+        "CGMP Deviations",
+        "Labeling & Packaging",
+        "Impurity & Nitrosamine",
+        "Foreign Matter & Particulate",
+        "Other Quality Defect"
+      ]
+    },
+    "reason_for_recall": { "type": "string", "minLength": 1 },
+    "product_description": { "type": "string", "minLength": 1 },
+    "state": { "type": "string" },
+    "country": { "type": "string" },
+    "ingested_at_utc": { "type": "string" },
+    "source_sha256": { "type": "string", "minLength": 64, "maxLength": 64 }
+  }
+}

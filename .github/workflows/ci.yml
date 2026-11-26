@@ -1,0 +1,41 @@
+name: CI - FAIR Quality Hub
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Lint with ruff
+        run: uv run ruff check src tests
+
+      - name: Build offline FAIR Gold pipeline
+        run: uv run pharma-qih-pipeline --offline
+
+      - name: Run pytest suite (including MCP v2 protocol tests)
+        run: uv run pytest -v
+
+      - name: Run golden AI accuracy, FPR, RBAC, and security evals
+        run: uv run pharma-qih-eval
+
+      - name: Upload golden eval report artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: golden-eval-report
+          path: evals/latest_report.json

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pharma Quality Intelligence Hub - Architecture (Hardened)</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --accent: #0f766e;
+      --accent-soft: #ccfbf1;
+      --blue: #1d4ed8;
+      --blue-soft: #dbeafe;
+      --amber: #b45309;
+      --amber-soft: #fef3c7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      padding: 32px 20px;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .sub { color: var(--muted); margin: 0 0 28px; font-size: 16px; }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .stage {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .stage.blue { border-top-color: var(--blue); }
+    .stage.amber { border-top-color: var(--amber); }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .stage.blue .tag { background: var(--blue-soft); color: var(--blue); }
+    .stage.amber .tag { background: var(--amber-soft); color: var(--amber); }
+    .stage h2 { font-size: 16px; margin: 0 0 6px; }
+    .stage p { font-size: 13.5px; color: var(--muted); margin: 0; }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      margin-bottom: 18px;
+    }
+    .panel h2 { font-size: 18px; margin: 0 0 10px; }
+    ul { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; font-size: 14.5px; }
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Pharma Quality Intelligence Hub</h1>
+    <p class="sub">Standards-audited architecture built for Amgen Senior Data Scientist (R-262535): GO-FAIR, Databricks Unity Catalog, MCP SDK v2, OWASP LLM/Agentic Top 10, and OpenTelemetry GenAI.</p>
+
+    <div class="flow">
+      <div class="stage">
+        <span class="tag">Layer 1: FAIR Data</span>
+        <h2>OpenFDA + Unity Catalog</h2>
+        <p>Bronze-Silver-Gold pipeline enforcing JSON Schema 2020-12 at runtime, SHA-256 lineage, CC0-1.0/MIT licensing, Delta NOT NULL/CHECK/PK constraints, and Unity Catalog SET TAGS.</p>
+      </div>
+      <div class="stage blue">
+        <span class="tag">Layer 2: Interfaces</span>
+        <h2>MCP v2 &amp; FastAPI RBAC</h2>
+        <p>5 read-only MCP v2 tools with ToolAnnotations and Pydantic output schemas, 2 MCP resources (fair://metadata, fair://policy), and FastAPI with APIKeyHeader + constant-time key verification.</p>
+      </div>
+      <div class="stage amber">
+        <span class="tag">Layer 3: AI Safety</span>
+        <h2>OWASP + OTel Telemetry</h2>
+        <p>Tool-level RBAC (OWASP ASI03), Unicode NFKC normalization, indirect injection and HTML/image sanitization, and OTel GenAI telemetry logging trace_id, split tokens, and 401/403 denials.</p>
+      </div>
+      <div class="stage">
+        <span class="tag">Layer 4: Quality Gate</span>
+        <h2>18-Case Evals &amp; CI/CD</h2>
+        <p>MCP v2 in-memory Client protocol tests, citation precision/recall/faithfulness, 0% guardrail false-positive rate, 0 RBAC leaks, and GitHub Actions CI with artifact upload.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>What each layer proves for Amgen R-262535</h2>
+      <ul>
+        <li><strong>FAIR Data &amp; Databricks Unity Catalog:</strong> <code>metadata/data_contract.json</code> (dataset PID <code>urn:pharma-qih:dataset:gold_recalls:v1.0.0</code>, 21 CFR 7.3 reference, ODCS SLA) enforced in Python and published to <code>workspace.pharma_quality_fair</code> with Unity Catalog <code>SET TAGS</code> and enforced Delta <code>CHECK</code> constraints.</li>
+        <li><strong>MCP Server &amp; Enterprise API:</strong> <code>src/pharma_qih/mcp_server.py</code> (MCP SDK v2.3 with <code>read_only_hint=True</code>, structured Pydantic outputs, and <code>fair://</code> resources) paired with <code>src/pharma_qih/api.py</code> (<code>APIKeyHeader</code> OpenAPI auth, pagination, and 503 DB fault handling).</li>
+        <li><strong>AI Security &amp; Evaluation:</strong> <code>src/pharma_qih/security.py</code> defends against OWASP LLM01/LLM02/LLM05/ASI03; <code>evals/golden_cases.json</code> tests 18 stratified cases (accuracy, benign-tricky FPR, cross-role RBAC, direct and Unicode-obfuscated attacks).</li>
+        <li><strong>Observability &amp; CI/CD:</strong> <code>src/pharma_qih/monitoring.py</code> captures OpenTelemetry GenAI fields (<code>trace_id</code>, <code>gen_ai_operation_name</code>, split input/output tokens, <code>error_type</code>); <code>.github/workflows/ci.yml</code> gates every commit.</li>
+      </ul>
+    </div>
+
+    <div class="panel">
+      <h2>How to defend this architecture in an interview</h2>
+      <ul>
+        <li><strong>Why Unity Catalog Tags AND TBLPROPERTIES?</strong> Unity Catalog <code>SET TAGS</code> powers workspace discovery and ABAC (FAIR Findable), while Delta <code>CHECK</code> constraints block bad rows at write time (FAIR Reusable).</li>
+        <li><strong>Why test Guardrail False Positive Rate (FPR)?</strong> Naive regex blockers break real pharma queries like "drop in potency" or "union of trends"; measuring both security recall and 0% FPR proves production engineering maturity.</li>
+        <li><strong>Why enforce RBAC inside both REST and MCP/Agent?</strong> Per OWASP Agentic Top 10 (ASI03), API-edge auth is not enough; the agent and MCP layer must enforce tool-level RBAC before executing any query.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
