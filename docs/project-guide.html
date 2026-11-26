@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pharma Quality Intelligence Hub - Complete Project Guide</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --accent: #0f766e;
+      --code-bg: #f1f5f9;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      padding: 32px 20px;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 28px; margin: 0 0 6px; }
+    .sub { color: var(--muted); margin: 0 0 24px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 18px;
+    }
+    h2 { font-size: 19px; margin: 0 0 12px; color: var(--accent); }
+    h3 { font-size: 15.5px; margin: 14px 0 6px; }
+    ul, ol { margin: 0; padding-left: 20px; }
+    li { margin-bottom: 8px; font-size: 14.5px; }
+    code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 14px 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    pre code { background: transparent; padding: 0; color: inherit; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { background: #f1f5f9; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Pharma Quality Intelligence Hub &mdash; Complete Reference Guide</h1>
+    <p class="sub">Readable companion to <code>README.md</code> &middot; Repo: <code>github.com/Padwalpankaj9/pharma-quality-intelligence-hub</code></p>
+
+    <div class="card">
+      <h2>1. What This Project Is</h2>
+      <p>An end-to-end <strong>FAIR Pharma Quality Data Product</strong>, <strong>Custom Python MCP v2 Server</strong>, <strong>RBAC-Gated FastAPI Service</strong>, and <strong>Evaluated Quality Investigation Agent</strong> built on live public FDA Drug Enforcement (Recall) data and deployed to <strong>Databricks Unity Catalog</strong> (<code>workspace.pharma_quality_fair</code>).</p>
+    </div>
+
+    <div class="card">
+      <h2>2. Repository Map</h2>
+      <table>
+        <thead><tr><th>File / Folder</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>metadata/data_contract.json</code></td><td>JSON Schema 2020-12 contract, dataset PID, CC0-1.0/MIT license, ODCS SLA, and 21 CFR 7.3 reference.</td></tr>
+          <tr><td><code>metadata/access_policy.yaml</code></td><td>RBAC role policy (<code>quality_viewer</code>, <code>quality_analyst</code>, <code>data_steward</code>) for REST and MCP tools.</td></tr>
+          <tr><td><code>src/pharma_qih/pipeline/run_pipeline.py</code></td><td>Bronze &rarr; Silver &rarr; Gold pipeline with runtime JSON Schema DQ gate, SHA-256 lineage, 7-class Quality taxonomy, and Z-score anomalies.</td></tr>
+          <tr><td><code>databricks/fair_openfda_pipeline.py</code> &amp; <code>deploy_to_databricks.py</code></td><td>PySpark medallion notebook + CLI deploy script publishing live Delta tables with Unity Catalog <code>SET TAGS</code> and enforced <code>NOT NULL</code>/<code>PK</code>/<code>CHECK</code> constraints.</td></tr>
+          <tr><td><code>src/pharma_qih/store.py</code> &amp; <code>models.py</code></td><td>Read-only SQLite URI (<code>?mode=ro</code>) queries with pagination and shared Pydantic v2 output schemas.</td></tr>
+          <tr><td><code>src/pharma_qih/mcp_server.py</code></td><td>Python MCP SDK v2 server: 5 read-only tools with <code>ToolAnnotations</code> + 2 <code>fair://</code> resources.</td></tr>
+          <tr><td><code>src/pharma_qih/api.py</code></td><td>FastAPI REST service with <code>APIKeyHeader</code> OpenAPI auth, constant-time key verification, 401/403 audit logging, and 503 DB handling.</td></tr>
+          <tr><td><code>src/pharma_qih/agent.py</code>, <code>security.py</code>, <code>monitoring.py</code></td><td>Citation-grounded agent, OWASP direct/indirect injection &amp; PII guardrails, tool-level RBAC, and OpenTelemetry-aligned SQLite telemetry.</td></tr>
+          <tr><td><code>evals/golden_cases.json</code> &amp; <code>eval_runner.py</code></td><td>18 stratified evals measuring accuracy, citation faithfulness, guardrail recall, 0% FPR, and 0 RBAC leaks.</td></tr>
+          <tr><td><code>tests/test_hub.py</code> &amp; <code>.github/workflows/ci.yml</code></td><td><code>pytest</code> suite (including in-memory MCP v2 <code>Client</code> tests) and GitHub Actions CI/CD gate.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>3. Quick Commands (Run Anytime)</h2>
+      <pre><code>cd ~/Documents/Software_Development/pharma-quality-intelligence-hub
+
+# Refresh live OpenFDA Bronze -> Silver -> Gold tables locally
+uv run pharma-qih-pipeline --limit 250
+
+# Run lint, pytest (including MCP v2 protocol client), and 18-case golden evals
+uv run ruff check src tests
+uv run pytest -v
+uv run pharma-qih-eval
+
+# Start local FastAPI server (Swagger UI at http://127.0.0.1:8000/docs)
+uv run pharma-qih-api
+
+# Start MCP v2 stdio server
+PHARMA_QIH_MCP_ROLE=quality_analyst uv run pharma-qih-mcp
+
+# Redeploy to Databricks Unity Catalog (workspace.pharma_quality_fair)
+uv run python databricks/deploy_to_databricks.py</code></pre>
+    </div>
+
+    <div class="card">
+      <h2>4. Interview Q&amp;A Cheat Sheet</h2>
+      <ol>
+        <li><strong>Why both SQLite and Databricks Unity Catalog?</strong> Read-only SQLite keeps local dev, MCP tests, and GitHub Actions CI sub-second with zero cloud secrets, while Unity Catalog proves live Delta governance (<code>SET TAGS</code>, <code>CHECK</code>, <code>PK</code>).</li>
+        <li><strong>Why Unity Catalog <code>SET TAGS</code> in addition to <code>TBLPROPERTIES</code>?</strong> Unity Catalog tags power Workspace Search, schema-to-table inheritance, and ABAC (FAIR Findable + Accessible), whereas <code>TBLPROPERTIES</code> holds table metadata.</li>
+        <li><strong>Why measure Guardrail False Positive Rate (FPR)?</strong> Naive filters block real pharma phrases like &ldquo;drop in potency&rdquo; or &ldquo;union of trends&rdquo;. Measuring 100% security recall with 0% FPR proves production safety.</li>
+        <li><strong>Why enforce RBAC inside the agent and MCP server?</strong> Per OWASP Agentic Top 10 (ASI03), API-edge auth is not enough; enforcing <code>is_mcp_tool_allowed</code> at the tool layer guarantees least privilege across REST, agent, and stdio MCP.</li>
+        <li><strong>How is MCP tested?</strong> Using MCP SDK v2&rsquo;s in-memory <code>Client(mcp_server.mcp)</code> to test real protocol framing (<code>list_tools</code> annotations/schemas, <code>call_tool</code> <code>structured_content</code>, RBAC denial, and <code>fair://</code> resources).</li>
+        <li><strong>What real bug did your evals catch?</strong> The <code>ZERO-01</code> case (&ldquo;Class III nitrosamine recalls&rdquo;) caught a substring bug where <code>class ii</code> matched inside <code>class iii</code> before <code>class iii</code> was checked.</li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>
